@@ -1,0 +1,7 @@
+Link for the information:
+
+http://www.liquibase.org/quickstart.html
+
+All You Tube resources on Liquibase: https://www.youtube.com/results?search_query=liquibase
+
+

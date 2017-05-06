@@ -1,0 +1,5 @@
+Link for You Tube (HikariCP example in Java): https://www.youtube.com/watch?v=756JDbYaVzE
+
+Link for hikariCp github: https://github.com/brettwooldridge/HikariCP
+
+
