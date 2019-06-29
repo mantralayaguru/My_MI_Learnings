@@ -1,0 +1,93 @@
+on installing the docker, we can check if docker is working fine by running an docker image:
+
+1. Run Docker Image
+$ docker run hello-world ==> This will print some messages.
+
+2. Check If Image is running
+$ docker ps  ===> Prints all the running docker images/instances.
+
+3. Running an image hello-World
+$ docker run tutum/hello-world
+Unable to find image 'tutum/hello-world:latest' locally
+latest: Pulling from tutum/hello-world
+658bc4dc7069: Pull complete
+a3ed95caeb02: Pull complete
+af3cc4b92fa1: Pull complete
+d0034177ece9: Pull complete
+983d35417974: Pull complete
+Digest: sha256:0d57def8055178aafb4c7669cbc25ec17f0acdab97cc587f30150802da8f8d85
+Status: Downloaded newer image for tutum/hello-world:latest
+
+4. Check if tutum/hello-world is running
+$ docker ps
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS               NAMES
+4ab6920a4334        tutum/hello-world   "/bin/sh -c 'php-fpm…"   52 seconds ago      Up 52 seconds       80/tcp              sad_clarke
+
+5. Docker Run Command Descriptiive
+
+Following two commands are same:
+$ docker run tutum/hello-world
+
+and 
+
+$ docker run hub.docker.com/tutum/hello-world:latest
+
+Here hub.docker.com - This is the docker registry where hello-world image created by Author tutum exists and we pull the image tagged latest.
+
+If we do not specify registry, by default it assumes hub.docker.com and if tag is not specified, by default it assumes latest
+
+The local registries can be defined in /etc/docker/daemon.json file as below:
+
+{
+  "insecure-registries" : ["docker-registry.dev.mobileiron.com:5000"]
+}
+
+Also any certs are stored in /etc/docker/certs.d 
+
+On Mac:
+=======
+cat ~/.docker/daemon.json
+{
+  "debug" : true,
+  "insecure-registries" : [
+    "docker-registry.dev.mobileiron.com:5000"
+  ],
+  "experimental" : true
+}
+
+5. How to Stop the Docker Container - Use Docker Stop Command
+$ docker ps
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS               NAMES
+4ab6920a4334        tutum/hello-world   "/bin/sh -c 'php-fpm…"   35 minutes ago      Up 35 minutes       80/tcp              sad_clarke
+
+$ docker stop 4ab6920a4334
+4ab6920a4334
+
+$ docker ps
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+
+6. Mapping local port to port on docker container
+$ docker run -p 3000:80 tutum/hello-world
+
+Now check if the docker is running for tutum/hello-world
+$ docker ps
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                  NAMES
+01c261f8be2b        tutum/hello-world   "/bin/sh -c 'php-fpm…"   15 seconds ago      Up 13 seconds       0.0.0.0:3000->80/tcp   epic_nash
+
+Now on Browser access http://localhost:3000 to access the WebServer hosted by tutum/hello-world
+
+7. Docker run command locks the shell and to come out you use CTRL-C, but that will kill the docker image/instance. To run the docker instance/image 
+in detatched mode by appending -d flag
+
+$ docker run -d -p 3000:80 tutum/hello-world
+636e3c28191ce48852a9aa093af836e3881bcc591b518940d98add46db15c01d
+
+This will allow you to run multiple instances of docker image on a same system.
+
+For example running three instances with daemon mode or background mode resulted in below:
+$ docker ps
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                  NAMES
+e5f28b4636f8        tutum/hello-world   "/bin/sh -c 'php-fpm…"   4 seconds ago       Up 2 seconds        0.0.0.0:3002->80/tcp   reverent_cocks
+48ddbbc825c7        tutum/hello-world   "/bin/sh -c 'php-fpm…"   8 seconds ago       Up 7 seconds        0.0.0.0:3001->80/tcp   infallible_heyrovsky
+636e3c28191c        tutum/hello-world   "/bin/sh -c 'php-fpm…"   About an hour ago   Up About an hour    0.0.0.0:3000->80/tcp   youthful_kare
+
