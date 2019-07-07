@@ -1,0 +1,105 @@
+Docker Container Life Cycle:
+============================
+
+    Deleted <================ Created
+       /\                       ||
+       ||                       ||
+       ||                       ||
+       ||                       ||
+       ||                       \/
+    Stopped <===============> Running <==========> Paused 
+
+If we run the command "docker run" or "docker start" command after "docker create" command, the docker continer goes to Running State.
+
+From Running state we can pause or unpause our continer, start or stop our continer or kill our container.
+
+When Continer is in Stopped state, you can either start the container or kill the container.
+==================================================================================================================
+Docker Life cycle examples:
+==================================================================================================================
+
+$ docker run -p 3000:3000 grafana/grafana
+
+$ docker ps
+CONTAINER ID        IMAGE               COMMAND             CREATED              STATUS              PORTS                    NAMES
+d156a781bda9        grafana/grafana     "/run.sh"           About a minute ago   Up About a minute   0.0.0.0:3000->3000/tcp   elegant_goldwasser
+
+===> Docker stop command can be executed against the docker container id or docker container name
+
+$ docker stop elegant_goldwasser
+elegant_goldwasser
+
+OR
+
+$ docker stop d156a781bda9
+d156a781bda9
+
+==> The portion(min three characters)  of the continer id is sufficient to stop the container as long as it is unique.
+for example the following will work.
+
+$ docker stop d15
+d156a781bda9
+
+===> Use the docker ps -a command to list all running and stopped containers
+$ docker ps -a
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                      PORTS               NAMES
+e1a7c64034ef        grafana/grafana     "/run.sh"                3 minutes ago       Exited (0) 2 minutes ago                        frosty_tu
+d156a781bda9        grafana/grafana     "/run.sh"                10 minutes ago      Exited (0) 8 minutes ago                        elegant_goldwasser
+
+===> Now you can start the container that is stopped, using the container id like below.
+$ docker start d15
+
+6. If docker stop does not stop the container, you can use the docker kill command
+$ docker kill d15
+
+This command will kill the container. It is always better to avoid the kill command as the termination of the container
+does not happen cleanly. Kill command sends the kill signal to the docker.
+
+7. If the docker is running in dettached mode, we can attach to it and see the logs on screen
+Ex: 
+
+a. Run the command in detatched mode:
+   $ docker run -d -p 3002:80 tutum/hello-world
+     a2a7316142db788052d1659a88324377a67ac984e1ade6054323f6c43cc16331
+
+b. Run the command 
+   docker attach a2a
+
+8. Execute the commands on the docker container directly
+Ex:
+
+a. Execute the command on the docker
+   Command: docker exec <container-id> <command>
+   Example: docker exec e1a7c64034ef pwd
+   Example: docker exec e1a7c64034ef ls
+
+b. Execute the command on the docker interactively - similar to ssh to docker container
+   Command: docker exec -it <container-id> /bin/bash ===> /bin/bash is the shell we are logging in 
+
+9. You can get to know everything about the docker container by inspecting the container
+   Command: docker inspect <Container-Id>
+   Example: docker inspect e0f39e0c8f11
+
+   This command returns a Json with all information about the docker container.
+
+10. You can get the history of an Docker container by running the history command. The history
+    provides information such as how the image is built and layers involved.
+    Command: docker history image-name
+    Example: docker history grafana/grafana
+    
+    IMAGE               CREATED             CREATED BY                                      SIZE                COMMENT
+c912f3f026ed        11 days ago         /bin/sh -c #(nop)  ENTRYPOINT ["/run.sh"]       0B
+<missing>           11 days ago         /bin/sh -c #(nop)  USER grafana                 0B
+<missing>           11 days ago         /bin/sh -c #(nop) COPY file:3e1dfb34fa628163…   3.35kB
+<missing>           11 days ago         /bin/sh -c #(nop)  EXPOSE 3000                  0B
+<missing>           11 days ago         |3 DEBIAN_FRONTEND=noninteractive GF_GID=472…   178kB
+<missing>           11 days ago         /bin/sh -c #(nop) COPY dir:fd41a7e8b49ba3907…   169MB
+<missing>           11 days ago         |3 DEBIAN_FRONTEND=noninteractive GF_GID=472…   24MB
+<missing>           11 days ago         /bin/sh -c #(nop) WORKDIR /usr/share/grafana    0B
+<missing>           11 days ago         /bin/sh -c #(nop)  ENV PATH=/usr/share/grafa…   0B
+<missing>           11 days ago         /bin/sh -c #(nop)  ARG DEBIAN_FRONTEND=nonin…   0B
+<missing>           11 days ago         /bin/sh -c #(nop)  ARG GF_GID=472               0B
+<missing>           11 days ago         /bin/sh -c #(nop)  ARG GF_UID=472               0B
+<missing>           3 weeks ago         /bin/sh -c #(nop)  CMD ["bash"]                 0B
+<missing>           3 weeks ago         /bin/sh -c #(nop) ADD file:5ffb798d64089418e…   55.3MB
+
