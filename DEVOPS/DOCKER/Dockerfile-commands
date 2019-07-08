@@ -1,0 +1,75 @@
+Here is the link to documentation: https://docs.docker.com/engine/reference/builder/
+
+Following is the list of all dockerfile commands:
+=================================================
+1. FROM - Specifies another docker image that should be used as a base image for the current image in question or defined alternatively, it is the base image that your image should inherit from. Techically, in a dockerfile, FROM is the first command, but ARG command can come before the FROM command. 
+
+   The FROM command takes the base image as the image or as the first layer of the docker image.
+
+   The syntax of the command is:
+   FROM <registry>/<user>/<image>:<tag>
+
+   The default registry is hub.docker.com
+   The default tag is "latest" 
+
+   Technically only image name is required.
+
+   Example:
+   FROM myregistry.com/james/myapp:1.0.0
+   FROM node
+
+2. RUN -
+3. CMD -
+
+   These commands have some similarities. RUN is going to execute a command in a new layer and then commit that to the final image. You can have as many RUN commands as you want in a single Dockerfile. These should be intermediate steps taken while building your image, running shell commands, installing dependencies, etc. 
+
+   The command CMD provides a default behavior for launching an instance of the image. You only have one of these per image and it does not run while the image is being built, but rather provides the default behavior for when your image actually runs. 
+
+   Both RUN and CMS have different formats that you can pass to them. These two formats are slightly different, but they can make a big difference, especially if you're expecting a certain behavior.
+
+
+4. LABEL
+5. ENTRYPOINT
+6. ENV
+7. ADD
+8. COPY
+
+   ADD and COPY can be used interchangeably except for some differences. Both takes a source and destination paths and copy files from SOURCE to the DESTINATION in the image. 
+   The ADD command can take an URL as a SOURCE path. Additionally the ADD command can take an compressed ZIP file as SOURCE and can un-compress the file to the DESTINATION path. 
+   It is always recommended to use the COPY command instead of the ADD command unless you want to use the specific behavior of ADD command.
+   
+
+9.  EXPOSE - 
+10. VOLUME - 
+    
+    EXPOSE and VOLUME commands are pretty similar. Both of these commands wants to signal that image wants to do something at runtime, and it is upto the host running the container to make use of that information when it runs as the container.
+    In the case of EXPOSE, it signals that an application in the container will be listening on the specific port, when the container runs. This does not map to the port on the host. This does not make the port available to the outside world.
+    In case of the VOLUME, it creates a mount point for the image that can be utilized at the runtime to have the host path or another container mounted at that path. However, since containers are platform independent but volume mounts depend on the host, the host directory cannot be specified within the Dockerfile. Again, that has to be determined at runtime. You can only signal that you would want a volume mounted at the path, you can't actually do the mounting inside the Dockerfile. 
+
+
+
+11. USER
+12. WORKDIR: 
+    The WORKDIR command sets the working directory for all future existenance of
+    a. RUN
+    b. CMD 
+    c. ENTRYPOINT
+    d. COPY
+    e. ADD
+    
+    All the above commands will run relative to the path set to the WORKDIR.
+
+- A Single Dockerfile may contain multiple WORKDIR command.
+- All the WORKDIR will chain together to form the final Working directory for the docker image.
+- 
+
+13. ARG
+14. ONBUILD
+15. STOPSIGNAL
+16. HEALTHCHECK
+17. SHELL
+
+
+ Both run and command have different formats that you can pass to them. These two formats are slightly different, but they can make a big difference, especially if you're expecting a certain behavior. The first format is the exact format where you pass in the name of the executable and all arguments in as an array of strings. 
+
+The first element in the array is the actual command to be executed and the rest are the parameters. This will run the executable as a standalone, not in a shell. The other format is without the array in quotes and will pass everything into the default shell for the image, like Bash. This allows you to do variable substitution like you normally cut in a shell and it runs the command that you wanted to run actually as a command in the shell. Environment an argument are two other commands that fill similar roles, but actually are different. Environment lets you specify key value pairs that become environment variables during the duration of the build but additionally persist when the image is run as a container. This means your application, while it is running, can access these environment variables. Arguments are passed into the build command and then can be utilized during the duration of the build. You shouldn't use this for sensitive info like keys or credentials, because that's what Docker Secrets are for. Arguments are nice because it lets you utilize the same Docker image but to pass in different information, perhaps if you were doing a different build for say staging or production. Label is a pretty simple one; it attaches metadata that shows up on the container and a key value pair, not a whole lot of complexity to this one. It doesn't actually change how your application runs but only changes the metadata that exists on the container. In this video, we took a look at many of the Dockerfile commands and some of their nuances. In the next video, we will put this knowledge to work and we'll write our first Dockerfile.

@@ -1,0 +1,23 @@
+DockerFile
+===========
+A dockerfile is a blueprint for a docker image. On building the dockerfile, the docker image gets created, which in turn will be used to create the docker containers.
+
+At its core it is a file containing step by step ways to build an docker image.
+The docker file contains:
+   - The Base Image
+   - Files to add into the image
+   - Intermediate Commands and Scripts
+   - Port definitions
+   - Command to Run when an instance is started.
+
+(Installing dependencies, compiling sources, setting the current working directory, defining ports to listen/write etc.)
+
+====================
+In a dockerfile most new commands create a layer, which is saved as a file and output of 
+that command is hashed. The image is broken up into layers, so that when you are creating new images, or while pushing images to dockerhub, or downloading the images from a registry, docker can quickly determine if those layers already exists on the target system by comparing hashes. If the layer already exists, docker does not have to download them, build them or upload them.
+
+One of the features that make the docker really powerful is its caching.
+
+Caching is when you store some data in an easily accessible manner, so that future requests for the same data can be served faster, either by avoiding fetching from a slower data source or by preventing expensive computations. A cache hit is when the item you are looking for and the cache is found. The cache miss is when the item you are looking for in the cache is not found in Docker. While building Dockerfiles, as soon as there is a cache miss, the cache is considered broken and all subsequent layers must be rebuilt. Caching makes Docker actions much faster and understanding how it works can greatly improve your Docker experience.
+
+
